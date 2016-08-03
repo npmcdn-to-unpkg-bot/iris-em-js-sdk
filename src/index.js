@@ -233,7 +233,7 @@ export class EventManager {
   * @param errorCallback - callback for failured case.  Receives error description.
   */
   roomStatus(roomName, successCallback, errorCallback) {
-    return fetch(this.config.emApiUrl + 'events/status/roomname/' + encodeURIComponent(roomName.replace(/\./g, '&#46;')), { //+ encodeURI(roomName) + '/', {
+    return fetch(this.config.emApiUrl + 'events/rtcserver/roomname/' + encodeURI(roomName), { // + encodeURIComponent(roomName.replace(/\./g, '&#46;')), { //
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
@@ -267,7 +267,9 @@ export class EventManager {
   * @param errorCallback - callback for failured case.  Receives error description.
   */
   getRooms(appDomain, count, successCallback, errorCallback) {
+    console.log(this.config.emApiUrl + 'events/rooms/appdomain/' + encodeURI(appDomain) + '/records/' + count.toString());
     return fetch(this.config.emApiUrl + 'events/rooms/appdomain/' + encodeURI(appDomain) + '/records/' + count.toString(), {
+    //return fetch(this.config.emApiUrl + 'events/rooms/appdomain/' + encodeURIComponent(appDomain.replace(/\./g, '&#46;')) + '/records/' + count.toString(), {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
@@ -286,7 +288,7 @@ export class EventManager {
   }
 
   /**
-  * @desc Get rooms - This API is called to get a reverse chronological (from time specified in parameter) and paginated list of rooms
+  * @desc Get rooms from time - This API is called to get a reverse chronological (from time specified in parameter) and paginated list of rooms
   *                   associated with an application domain, embedded in the room name. This is specific to listing
   *                   adhoc rooms for a specific application domain. THE LIST IS SORTED (most recent to least recent) BY ACTIVITY TIME.
   * @param appDomain - The domain part of the room name which was used to create root event
@@ -316,6 +318,73 @@ export class EventManager {
     })
     .catch((error) => {
       console.log('getRoomsFromTime failed: ' + error);
+      errorCallback(error);
+    });
+  }
+
+  /**
+  * @desc Get rooms for routing id - This API is called to get a reverse chronological (most recent first) and paginated list of rooms
+  *                                  associated with a routing ID. THE LIST IS SORTED (most recent to least recent) BY ACTIVITY TIME.
+  * @param routingID - Routing ID.
+  * @param count     - Number of records requested.
+  *
+  * @param successCallback - callback for success case.  Receives response as
+  *        a parameter.  Following information is returned on successful call:
+  *
+  *    room_id             UUID           Room ID (returned when a root event is created).
+  *    last_seen           64-bit int     Most recent time there was activity in this room.
+  *
+  * @param errorCallback - callback for failured case.  Receives error description.
+  */
+  getRoomsForRoutingID(routingID, count, successCallback, errorCallback) {
+    return fetch(this.config.emApiUrl + 'events/rooms/routingid/' + encodeURI(routingID) + '/records/' + count.toString(), {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': this.config.jwt,
+      },
+    })
+    .then(this._checkStatus)
+    .then(this._parseJSON)
+    .then((data) => {
+      successCallback(data);
+    })
+    .catch((error) => {
+      console.log('getRoomsForRoutingID failed: ' + error);
+      errorCallback(error);
+    });
+  }
+
+  /**
+  * @desc Get rooms for routing id - This API is called to get a reverse chronological (most recent first) and paginated list of rooms
+  *                                  associated with a routing ID. THE LIST IS SORTED (most recent to least recent) BY ACTIVITY TIME.
+  * @param routingID - Routing ID.
+  * @param time      - Time in Milliseconds. From this time, get list of records in reverse chronological order.
+  * @param count     - Number of records requested.
+  *
+  * @param successCallback - callback for success case.  Receives response as
+  *        a parameter.  Following information is returned on successful call:
+  *
+  *    room_id             UUID           Room ID (returned when a root event is created).
+  *    last_seen           64-bit int     Most recent time there was activity in this room.
+  *
+  * @param errorCallback - callback for failured case.  Receives error description.
+  */
+  getRoomsForRoutingIDWithTime(routingID, time, count, successCallback, errorCallback) {
+    return fetch(this.config.emApiUrl + 'events/rooms/routingid/' + encodeURI(routingID) + '/time/' + time.toString() + '/records/' + count.toString(), {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': this.config.jwt,
+      },
+    })
+    .then(this._checkStatus)
+    .then(this._parseJSON)
+    .then((data) => {
+      successCallback(data);
+    })
+    .catch((error) => {
+      console.log('getRoomsForRoutingID failed: ' + error);
       errorCallback(error);
     });
   }
