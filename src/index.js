@@ -480,4 +480,180 @@ export class EventManager {
       errorCallback(error);
     });
   }
+
+  /**
+  * @desc Get root events - This API is called to get a reverse chronological (most recent first) and paginated list of
+  *                         direct root events associated with a room name. THE LIST IS SORTED (most recent to least recent) BY
+  *                         EVENT UPDATE TIME.
+  * @param type      - Type of event (Ex: "audiocall", "videocall", "comments", "pictureshare", "liveshare", "likes",...)
+  * @param name      - Room name.
+  * @param count     - Number of records requested.
+  *
+  * @param successCallback - callback for success case.  Receives response as
+  *        a parameter.  Following information is returned on successful call:
+  *
+  *    event_type             string         Type of event (Ex: "audiocall", "videocall", "comments", "pictureshare", "liveshare", "likes",...)
+  *    routing_id             string         Routing_id which triggered the event (This may not be a valid ID for ADHOC rooms).
+  *    child_node_id          UUID           Node ID for ALL DIRECT child events.
+  *    root_event_created_at  64-bit int     Time in milliseconds.
+  *    root_event_updated_at  64-bit int     Time in milliseconds.
+  *    eventdata              blob           A stringified JSON blob of event specific data. This data is created and maintained
+  *                                          by the event manager. The first name value pair is ALWAYS the version in the format
+  *                                          "version":"1.0" - This will help identify/track changes to the JSON blob and keep
+  *                                          this blog backward/forward compatible.
+  *    userdata               blob           User specific data added a the time of creating this event.
+  *
+  * @param errorCallback - callback for failured case.  Receives error description.
+  */
+  getRootEventsForRoom(eventType, roomName, count, successCallback, errorCallback) {
+    return fetch(this.config.emApiUrl + 'events/view/event/' + encodeURI(eventType) + '/roomname/' + encodeURI(roomName) + '/records/' + count.toString(), {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': this.config.jwt,
+      },
+    })
+    .then(this._checkStatus)
+    .then(this._parseJSON)
+    .then((data) => {
+      successCallback(data);
+    })
+    .catch((error) => {
+      console.log('getRootEventsForRoom failed: ' + error);
+      errorCallback(error);
+    });
+  }
+
+  /**
+  * @desc Get root events - This API is called to get a reverse chronological (most recent first) and paginated list of
+  *                         direct root events associated with a room name. THE LIST IS SORTED (most recent to least recent) BY
+  *                         EVENT UPDATE TIME.
+  * @param type      - Type of event (Ex: "audiocall", "videocall", "comments", "pictureshare", "liveshare", "likes",...)
+  * @param name      - Room name.
+  * @param time      - Time in Milliseconds. From this time, get list of records in reverse chronological order.
+  * @param count     - Number of records requested.
+  *
+  * @param successCallback - callback for success case.  Receives response as
+  *        a parameter.  Following information is returned on successful call:
+  *
+  *    event_type             string         Type of event (Ex: "audiocall", "videocall", "comments", "pictureshare", "liveshare", "likes",...)
+  *    routing_id             string         Routing_id which triggered the event (This may not be a valid ID for ADHOC rooms).
+  *    child_node_id          UUID           Node ID for ALL DIRECT child events.
+  *    root_event_created_at  64-bit int     Time in milliseconds.
+  *    root_event_updated_at  64-bit int     Time in milliseconds.
+  *    eventdata              blob           A stringified JSON blob of event specific data. This data is created and maintained
+  *                                          by the event manager. The first name value pair is ALWAYS the version in the format
+  *                                          "version":"1.0" - This will help identify/track changes to the JSON blob and keep
+  *                                          this blog backward/forward compatible.
+  *    userdata               blob           User specific data added a the time of creating this event.
+  *
+  * @param errorCallback - callback for failured case.  Receives error description.
+  */
+  getRootEventsForRoomWithTime(eventType, roomName, time, count, successCallback, errorCallback) {
+    return fetch(this.config.emApiUrl + 'events/view/event/' + encodeURI(eventType) + '/roomname/' + encodeURI(roomName) + '/time/' + time.toString() + '/records/' + count.toString(), {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': this.config.jwt,
+      },
+    })
+    .then(this._checkStatus)
+    .then(this._parseJSON)
+    .then((data) => {
+      successCallback(data);
+    })
+    .catch((error) => {
+      console.log('getRootEventsForRoomWithTime failed: ' + error);
+      errorCallback(error);
+    });
+  }
+
+  /**
+  * @desc Get root events - A room is associated with multiple root events.
+  *                         This API is called to get a reverse chronological (most recent first) and paginated list of
+  *                         direct root events associated with a room ID. THE LIST IS SORTED (most recent to least recent) BY
+  *                         EVENT UPDATE TIME.
+  * @param type      - Type of event (Ex: "audiocall", "videocall", "comments", "pictureshare", "liveshare", "likes",...)
+  * @param if        - Room id.
+  * @param count     - Number of records requested.
+  *
+  * @param successCallback - callback for success case.  Receives response as
+  *        a parameter.  Following information is returned on successful call:
+  *
+  *    event_type             string         Type of event (Ex: "audiocall", "videocall", "comments", "pictureshare", "liveshare", "likes",...)
+  *    routing_id             string         Routing_id which triggered the event (This may not be a valid ID for ADHOC rooms).
+  *    child_node_id          UUID           Node ID for ALL DIRECT child events.
+  *    root_event_created_at  64-bit int     Time in milliseconds.
+  *    root_event_updated_at  64-bit int     Time in milliseconds.
+  *    eventdata              blob           A stringified JSON blob of event specific data. This data is created and maintained
+  *                                          by the event manager. The first name value pair is ALWAYS the version in the format
+  *                                          "version":"1.0" - This will help identify/track changes to the JSON blob and keep
+  *                                          this blog backward/forward compatible.
+  *    userdata               blob           User specific data added a the time of creating this event.
+  *
+  * @param errorCallback - callback for failured case.  Receives error description.
+  */
+  getRootEventsForRoomID(eventType, roomID, count, successCallback, errorCallback) {
+    return fetch(this.config.emApiUrl + 'events/view/event/' + encodeURI(eventType) + '/room/' + encodeURI(roomID) + '/records/' + count.toString(), {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': this.config.jwt,
+      },
+    })
+    .then(this._checkStatus)
+    .then(this._parseJSON)
+    .then((data) => {
+      successCallback(data);
+    })
+    .catch((error) => {
+      console.log('getRootEventsForRoomID failed: ' + error);
+      errorCallback(error);
+    });
+  }
+
+  /**
+  * @desc Get root events - A room is associated with multiple root events.
+  *                         This API is called to get a reverse chronological (most recent first) and paginated list of
+  *                         direct root events associated with a room ID. THE LIST IS SORTED (most recent to least recent) BY
+  *                         EVENT UPDATE TIME.
+  * @param type      - Type of event (Ex: "audiocall", "videocall", "comments", "pictureshare", "liveshare", "likes",...)
+  * @param if        - Room id.
+  * @param time      - Time in Milliseconds. From this time, get list of records in reverse chronological order.
+  * @param count     - Number of records requested.
+  *
+  * @param successCallback - callback for success case.  Receives response as
+  *        a parameter.  Following information is returned on successful call:
+  *
+  *    event_type             string         Type of event (Ex: "audiocall", "videocall", "comments", "pictureshare", "liveshare", "likes",...)
+  *    routing_id             string         Routing_id which triggered the event (This may not be a valid ID for ADHOC rooms).
+  *    child_node_id          UUID           Node ID for ALL DIRECT child events.
+  *    root_event_created_at  64-bit int     Time in milliseconds.
+  *    root_event_updated_at  64-bit int     Time in milliseconds.
+  *    eventdata              blob           A stringified JSON blob of event specific data. This data is created and maintained
+  *                                          by the event manager. The first name value pair is ALWAYS the version in the format
+  *                                          "version":"1.0" - This will help identify/track changes to the JSON blob and keep
+  *                                          this blog backward/forward compatible.
+  *    userdata               blob           User specific data added a the time of creating this event.
+  *
+  * @param errorCallback - callback for failured case.  Receives error description.
+  */
+  getRootEventsForRoomIDWithTime(eventType, roomID, time, count, successCallback, errorCallback) {
+    return fetch(this.config.emApiUrl + 'events/view/event/' + encodeURI(eventType) + '/room/' + encodeURI(roomID) + '/time/' + time.toString() + '/records/' + count.toString(), {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': this.config.jwt,
+      },
+    })
+    .then(this._checkStatus)
+    .then(this._parseJSON)
+    .then((data) => {
+      successCallback(data);
+    })
+    .catch((error) => {
+      console.log('getRootEventsForRoomIDWithTime failed: ' + error);
+      errorCallback(error);
+    });
+  }
 }

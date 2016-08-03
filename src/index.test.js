@@ -497,3 +497,191 @@ describe('getRootEventsForRoutingIDWithTime', () => {
     });
   });
 });
+
+describe('getRootEventsForRoom', () => {
+  it('should get root events for room name', (done) => {
+    let authMgr = new AuthManager({'managementApiUrl': 'https://iris.xrtc.me/', 'appKey': appKey});
+    authMgr.anonymousLogin('UserName', (data) => {
+      expect(data).to.have.property('Token');
+      let eventMgr = new EventManager({ emApiUrl: eventManagerUrl, jwt: data.Token });
+      const options = {
+        room_name: 'wGMQQtEi8Y@IrisVideoChat.comcast.com',
+        event_type: 'videocall',
+        time_posted: Number(new Date()),
+        from: '1bcypode-mda4-8g02-dawk-63fmjrqps4qf@IrisVideoChat.comcast.com'
+      }
+      eventMgr.createRootEvent(options, (data) => {
+        console.log(data);
+        expect(data).to.have.property('Root_node_id');
+        expect(data).to.have.property('Child_node_id');
+        expect(data).to.have.property('Eventdata');
+
+        eventMgr.getRootEventsForRoom('videocall', 'wGMQQtEi8Y@IrisVideoChat.comcast.com', 10, (events) => {
+          console.log(events);
+          expect(events.length).to.be.above(0);
+          events.map((event) => {
+            expect(event).to.have.property('Node_id');
+            expect(event).to.have.property('Child_node_id');
+            expect(event).to.have.property('Root_node_id');
+            expect(event).to.have.property('Eventdata');
+          })
+          done();
+        }, (error) => {
+          console.log(error);
+          expect(true).to.be.false;
+          done();
+        });
+      }, (error) => {
+        console.log(error);
+        expect(true).to.be.false;
+        done();
+      });
+    }, (error) => {
+      console.log(error);
+      expect(true).to.be.false;
+      done();
+    });
+  });
+});
+
+describe('getRootEventsForRoomWithTime', () => {
+  it('should get root events for room name for time period', (done) => {
+    let timeMark = Number(new Date());
+    let authMgr = new AuthManager({'managementApiUrl': 'https://iris.xrtc.me/', 'appKey': appKey});
+    authMgr.anonymousLogin('UserName', (data) => {
+      expect(data).to.have.property('Token');
+      let eventMgr = new EventManager({ emApiUrl: eventManagerUrl, jwt: data.Token });
+      const options = {
+        room_name: 'wGMQQtEi8Y@IrisVideoChat.comcast.com',
+        event_type: 'videocall',
+        time_posted: Number(new Date()),
+        from: '1bcypode-mda4-8g02-dawk-63fmjrqps4qf@IrisVideoChat.comcast.com'
+      }
+      eventMgr.createRootEvent(options, (data) => {
+        console.log(data);
+        expect(data).to.have.property('Root_node_id');
+        expect(data).to.have.property('Child_node_id');
+        expect(data).to.have.property('Eventdata');
+
+        eventMgr.getRootEventsForRoomWithTime('videocall', 'wGMQQtEi8Y@IrisVideoChat.comcast.com', timeMark, 10, (events) => {
+          console.log(events);
+          expect(events.length).to.be.above(0);
+          events.map((event) => {
+            expect(event).to.have.property('Node_id');
+            expect(event).to.have.property('Child_node_id');
+            expect(event).to.have.property('Root_node_id');
+            expect(event).to.have.property('Eventdata');
+          })
+          done();
+        }, (error) => {
+          console.log(error);
+          expect(true).to.be.false;
+          done();
+        });
+      }, (error) => {
+        console.log(error);
+        expect(true).to.be.false;
+        done();
+      });
+    }, (error) => {
+      console.log(error);
+      expect(true).to.be.false;
+      done();
+    });
+  });
+});
+
+describe('getRootEventsForRoomID', () => {
+  it('should get root events for room id', (done) => {
+    let authMgr = new AuthManager({'managementApiUrl': 'https://iris.xrtc.me/', 'appKey': appKey});
+    authMgr.anonymousLogin('UserName', (data) => {
+      expect(data).to.have.property('Token');
+      let eventMgr = new EventManager({ emApiUrl: eventManagerUrl, jwt: data.Token });
+      const options = {
+        room_name: 'wGMQQtEi8Y@IrisVideoChat.comcast.com',
+        event_type: 'videocall',
+        time_posted: Number(new Date()),
+        from: '1bcypode-mda4-8g02-dawk-63fmjrqps4qf@IrisVideoChat.comcast.com'
+      }
+      eventMgr.createRootEvent(options, (data) => {
+        console.log(data);
+        expect(data).to.have.property('Root_node_id');
+        expect(data).to.have.property('Child_node_id');
+        expect(data).to.have.property('Eventdata');
+        console.log('RoomID: ' + data.Eventdata.Room_id);
+
+        eventMgr.getRootEventsForRoomID('videocall', data.Eventdata.Room_id, 10, (events) => {
+          console.log(events);
+          expect(events.length).to.be.above(0);
+          events.map((event) => {
+            expect(event).to.have.property('Node_id');
+            expect(event).to.have.property('Child_node_id');
+            expect(event).to.have.property('Root_node_id');
+            expect(event).to.have.property('Eventdata');
+          })
+          done();
+        }, (error) => {
+          console.log(error);
+          expect(true).to.be.false;
+          done();
+        });
+      }, (error) => {
+        console.log(error);
+        expect(true).to.be.false;
+        done();
+      });
+    }, (error) => {
+      console.log(error);
+      expect(true).to.be.false;
+      done();
+    });
+  });
+});
+
+describe('getRootEventsForRoomIDWithTime', () => {
+  it('should get root events for room id for time period', (done) => {
+    let timeMark = Number(new Date());
+    let authMgr = new AuthManager({'managementApiUrl': 'https://iris.xrtc.me/', 'appKey': appKey});
+    authMgr.anonymousLogin('UserName', (data) => {
+      expect(data).to.have.property('Token');
+      let eventMgr = new EventManager({ emApiUrl: eventManagerUrl, jwt: data.Token });
+      const options = {
+        room_name: 'wGMQQtEi8Y@IrisVideoChat.comcast.com',
+        event_type: 'videocall',
+        time_posted: Number(new Date()),
+        from: '1bcypode-mda4-8g02-dawk-63fmjrqps4qf@IrisVideoChat.comcast.com'
+      }
+      eventMgr.createRootEvent(options, (data) => {
+        console.log(data);
+        expect(data).to.have.property('Root_node_id');
+        expect(data).to.have.property('Child_node_id');
+        expect(data).to.have.property('Eventdata');
+        console.log('RoomID: ' + data.Eventdata.Room_id);
+
+        eventMgr.getRootEventsForRoomIDWithTime('videocall', data.Eventdata.Room_id, timeMark, 10, (events) => {
+          console.log(events);
+          expect(events.length).to.be.above(0);
+          events.map((event) => {
+            expect(event).to.have.property('Node_id');
+            expect(event).to.have.property('Child_node_id');
+            expect(event).to.have.property('Root_node_id');
+            expect(event).to.have.property('Eventdata');
+          })
+          done();
+        }, (error) => {
+          console.log(error);
+          expect(true).to.be.false;
+          done();
+        });
+      }, (error) => {
+        console.log(error);
+        expect(true).to.be.false;
+        done();
+      });
+    }, (error) => {
+      console.log(error);
+      expect(true).to.be.false;
+      done();
+    });
+  });
+});
