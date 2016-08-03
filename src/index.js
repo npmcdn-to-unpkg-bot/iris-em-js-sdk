@@ -574,7 +574,7 @@ export class EventManager {
   *                         direct root events associated with a room ID. THE LIST IS SORTED (most recent to least recent) BY
   *                         EVENT UPDATE TIME.
   * @param type      - Type of event (Ex: "audiocall", "videocall", "comments", "pictureshare", "liveshare", "likes",...)
-  * @param if        - Room id.
+  * @param id        - Room id.
   * @param count     - Number of records requested.
   *
   * @param successCallback - callback for success case.  Receives response as
@@ -618,7 +618,7 @@ export class EventManager {
   *                         direct root events associated with a room ID. THE LIST IS SORTED (most recent to least recent) BY
   *                         EVENT UPDATE TIME.
   * @param type      - Type of event (Ex: "audiocall", "videocall", "comments", "pictureshare", "liveshare", "likes",...)
-  * @param if        - Room id.
+  * @param id        - Room id.
   * @param time      - Time in Milliseconds. From this time, get list of records in reverse chronological order.
   * @param count     - Number of records requested.
   *
@@ -653,6 +653,38 @@ export class EventManager {
     })
     .catch((error) => {
       console.log('getRootEventsForRoomIDWithTime failed: ' + error);
+      errorCallback(error);
+    });
+  }
+
+  /**
+  * @desc Event count - This API is called to get the total number of "direct" events associated with a child node ID or room ID.
+  * @param type      - Type of event (Ex: "audiocall", "videocall", "comments", "pictureshare", "liveshare", "likes",...)
+  * @param id        - Room id.
+  *
+  * @param successCallback - callback for success case.  Receives response as
+  *        a parameter.  Following information is returned on successful call:
+  *
+  *    count                  int            Number of times a DIRECT event associated with a child
+  *                                          node ID or room ID has occurred.
+  *
+  * @param errorCallback - callback for failured case.  Receives error description.
+  */
+  getEventCount(eventType, roomID, successCallback, errorCallback) {
+    return fetch(this.config.emApiUrl + 'events/count/event/' + encodeURI(eventType) + '/node/' + encodeURI(roomID), {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': this.config.jwt,
+      },
+    })
+    .then(this._checkStatus)
+    .then(this._parseJSON)
+    .then((data) => {
+      successCallback(data);
+    })
+    .catch((error) => {
+      console.log('getEventCount failed: ' + error);
       errorCallback(error);
     });
   }

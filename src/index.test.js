@@ -520,9 +520,10 @@ describe('getRootEventsForRoom', () => {
           console.log(events);
           expect(events.length).to.be.above(0);
           events.map((event) => {
-            expect(event).to.have.property('Node_id');
+            expect(event).to.have.property('Routing_id');
             expect(event).to.have.property('Child_node_id');
-            expect(event).to.have.property('Root_node_id');
+            expect(event).to.have.property('Root_event_created_at');
+            expect(event).to.have.property('Root_event_updated_at');
             expect(event).to.have.property('Eventdata');
           })
           done();
@@ -567,9 +568,10 @@ describe('getRootEventsForRoomWithTime', () => {
           console.log(events);
           expect(events.length).to.be.above(0);
           events.map((event) => {
-            expect(event).to.have.property('Node_id');
+            expect(event).to.have.property('Routing_id');
             expect(event).to.have.property('Child_node_id');
-            expect(event).to.have.property('Root_node_id');
+            expect(event).to.have.property('Root_event_created_at');
+            expect(event).to.have.property('Root_event_updated_at');
             expect(event).to.have.property('Eventdata');
           })
           done();
@@ -614,9 +616,10 @@ describe('getRootEventsForRoomID', () => {
           console.log(events);
           expect(events.length).to.be.above(0);
           events.map((event) => {
-            expect(event).to.have.property('Node_id');
+            expect(event).to.have.property('Routing_id');
             expect(event).to.have.property('Child_node_id');
-            expect(event).to.have.property('Root_node_id');
+            expect(event).to.have.property('Root_event_created_at');
+            expect(event).to.have.property('Root_event_updated_at');
             expect(event).to.have.property('Eventdata');
           })
           done();
@@ -659,6 +662,55 @@ describe('getRootEventsForRoomIDWithTime', () => {
         console.log('RoomID: ' + data.Eventdata.Room_id);
 
         eventMgr.getRootEventsForRoomIDWithTime('videocall', data.Eventdata.Room_id, timeMark, 10, (events) => {
+          console.log(events);
+          expect(events.length).to.be.above(0);
+          events.map((event) => {
+            expect(event).to.have.property('Routing_id');
+            expect(event).to.have.property('Child_node_id');
+            expect(event).to.have.property('Root_event_created_at');
+            expect(event).to.have.property('Root_event_updated_at');
+            expect(event).to.have.property('Eventdata');
+          })
+          done();
+        }, (error) => {
+          console.log(error);
+          expect(true).to.be.false;
+          done();
+        });
+      }, (error) => {
+        console.log(error);
+        expect(true).to.be.false;
+        done();
+      });
+    }, (error) => {
+      console.log(error);
+      expect(true).to.be.false;
+      done();
+    });
+  });
+});
+
+describe('getEventCount', () => {
+  it('should get event count', (done) => {
+    let timeMark = Number(new Date());
+    let authMgr = new AuthManager({'managementApiUrl': 'https://iris.xrtc.me/', 'appKey': appKey});
+    authMgr.anonymousLogin('UserName', (data) => {
+      expect(data).to.have.property('Token');
+      let eventMgr = new EventManager({ emApiUrl: eventManagerUrl, jwt: data.Token });
+      const options = {
+        room_name: 'wGMQQtEi8Y@IrisVideoChat.comcast.com',
+        event_type: 'videocall',
+        time_posted: Number(new Date()),
+        from: '1bcypode-mda4-8g02-dawk-63fmjrqps4qf@IrisVideoChat.comcast.com'
+      }
+      eventMgr.createRootEvent(options, (data) => {
+        console.log(data);
+        expect(data).to.have.property('Root_node_id');
+        expect(data).to.have.property('Child_node_id');
+        expect(data).to.have.property('Eventdata');
+        console.log('RoomID: ' + data.Eventdata.Room_id);
+
+        eventMgr.getEventCount('videocall', data.Eventdata.Room_id, (events) => {
           console.log(events);
           expect(events.length).to.be.above(0);
           events.map((event) => {
