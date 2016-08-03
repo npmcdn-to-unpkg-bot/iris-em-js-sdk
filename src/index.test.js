@@ -8,11 +8,12 @@ import { EventManager } from './index';
 'videocall', '2bcypode-mda6-8g02-dawk-63fmjrqps4qf@IrisVideoChat.comcast.com', '1bcypode-mda4-8g02-dawk-63fmjrqps4qf@IrisVideoChat.comcast.com', { field1: 'field1', field2: 'field2' }
 */
 
-const eventManagerUrl = 'https://st-evmgr-cmce-002.poc.sys.comcast.net/'
+const eventManagerUrl = 'https://st-evmgr-cmce-002.poc.sys.comcast.net/';
+const appKey = 'bJjeXEpiqXMBAJpuDr0ksg7pkUCQlNlV';
 
 describe('createXmppRootEventWithRoom', () => {
   it('should create xmpp root event', (done) => {
-    let authMgr = new AuthManager({'managementApiUrl': 'https://iris.xrtc.me/', 'appKey': '6y14ljTXnjEgeHYZ0+R5NHA8FEEVg9wR'});
+    let authMgr = new AuthManager({'managementApiUrl': 'https://iris.xrtc.me/', 'appKey': appKey});
     authMgr.anonymousLogin('UserName', (data) => {
       expect(data).to.have.property('Token');
       let eventMgr = new EventManager({ emApiUrl: eventManagerUrl, jwt: data.Token });
@@ -43,7 +44,7 @@ describe('createXmppRootEventWithRoom', () => {
 
 describe('createXmppRootEvent', () => {
   it('should create xmpp root event', (done) => {
-    let authMgr = new AuthManager({'managementApiUrl': 'https://iris.xrtc.me/', 'appKey': '6y14ljTXnjEgeHYZ0+R5NHA8FEEVg9wR'});
+    let authMgr = new AuthManager({'managementApiUrl': 'https://iris.xrtc.me/', 'appKey': appKey});
     authMgr.anonymousLogin('UserName', (data) => {
       expect(data).to.have.property('Token');
       let eventMgr = new EventManager({ emApiUrl: eventManagerUrl, jwt: data.Token });
@@ -74,7 +75,7 @@ describe('createXmppRootEvent', () => {
 
 describe('createRootEventWithRoom', () => {
   it('should create root event', (done) => {
-    let authMgr = new AuthManager({'managementApiUrl': 'https://iris.xrtc.me/', 'appKey': '6y14ljTXnjEgeHYZ0+R5NHA8FEEVg9wR'});
+    let authMgr = new AuthManager({'managementApiUrl': 'https://iris.xrtc.me/', 'appKey': appKey});
     authMgr.anonymousLogin('UserName', (data) => {
       expect(data).to.have.property('Token');
       let eventMgr = new EventManager({ emApiUrl: eventManagerUrl, jwt: data.Token });
@@ -105,7 +106,7 @@ describe('createRootEventWithRoom', () => {
 
 describe('createRootEvent', () => {
   it('should create root event', (done) => {
-    let authMgr = new AuthManager({'managementApiUrl': 'https://iris.xrtc.me/', 'appKey': '6y14ljTXnjEgeHYZ0+R5NHA8FEEVg9wR'});
+    let authMgr = new AuthManager({'managementApiUrl': 'https://iris.xrtc.me/', 'appKey': appKey});
     authMgr.anonymousLogin('UserName', (data) => {
       expect(data).to.have.property('Token');
       let eventMgr = new EventManager({ emApiUrl: eventManagerUrl, jwt: data.Token });
@@ -136,7 +137,7 @@ describe('createRootEvent', () => {
 
 describe('createChildEvent', () => {
   it('should create child event', (done) => {
-    let authMgr = new AuthManager({'managementApiUrl': 'https://iris.xrtc.me/', 'appKey': '6y14ljTXnjEgeHYZ0+R5NHA8FEEVg9wR'});
+    let authMgr = new AuthManager({'managementApiUrl': 'https://iris.xrtc.me/', 'appKey': appKey});
     authMgr.anonymousLogin('UserName', (data) => {
       expect(data).to.have.property('Token');
       let eventMgr = new EventManager({ emApiUrl: eventManagerUrl, jwt: data.Token });
@@ -183,7 +184,7 @@ describe('createChildEvent', () => {
 
 describe('roomStatus', () => {
   it('should get room status', (done) => {
-    let authMgr = new AuthManager({'managementApiUrl': 'https://iris.xrtc.me/', 'appKey': '6y14ljTXnjEgeHYZ0+R5NHA8FEEVg9wR'});
+    let authMgr = new AuthManager({'managementApiUrl': 'https://iris.xrtc.me/', 'appKey': appKey});
     authMgr.anonymousLogin('UserName', (data) => {
       expect(data).to.have.property('Token');
       let eventMgr = new EventManager({ emApiUrl: eventManagerUrl, jwt: data.Token });
@@ -228,7 +229,7 @@ describe('roomStatus', () => {
 
 describe('getRooms', () => {
   it('should get array of rooms for app domain', (done) => {
-    let authMgr = new AuthManager({'managementApiUrl': 'https://iris.xrtc.me/', 'appKey': '6y14ljTXnjEgeHYZ0+R5NHA8FEEVg9wR'});
+    let authMgr = new AuthManager({'managementApiUrl': 'https://iris.xrtc.me/', 'appKey': appKey});
     authMgr.anonymousLogin('UserName', (data) => {
       expect(data).to.have.property('Token');
       let eventMgr = new EventManager({ emApiUrl: eventManagerUrl, jwt: data.Token });
@@ -273,7 +274,7 @@ describe('getRooms', () => {
 describe('getRoomsFromTime', () => {
   it('should get array of rooms for app domain from specified time', (done) => {
     let timeMark = Number(new Date());
-    let authMgr = new AuthManager({'managementApiUrl': 'https://iris.xrtc.me/', 'appKey': '6y14ljTXnjEgeHYZ0+R5NHA8FEEVg9wR'});
+    let authMgr = new AuthManager({'managementApiUrl': 'https://iris.xrtc.me/', 'appKey': appKey});
     authMgr.anonymousLogin('UserName', (data) => {
       expect(data).to.have.property('Token');
       let eventMgr = new EventManager({ emApiUrl: eventManagerUrl, jwt: data.Token });
@@ -317,7 +318,7 @@ describe('getRoomsFromTime', () => {
 
 describe('getRoomsForRoutingID', () => {
   it('should get array of rooms for routing id', (done) => {
-    let authMgr = new AuthManager({'managementApiUrl': 'https://iris.xrtc.me/', 'appKey': '6y14ljTXnjEgeHYZ0+R5NHA8FEEVg9wR'});
+    let authMgr = new AuthManager({'managementApiUrl': 'https://iris.xrtc.me/', 'appKey': appKey});
     authMgr.anonymousLogin('UserName', (data) => {
       expect(data).to.have.property('Token');
       let eventMgr = new EventManager({ emApiUrl: eventManagerUrl, jwt: data.Token });
@@ -362,7 +363,7 @@ describe('getRoomsForRoutingID', () => {
 describe('getRoomsForRoutingIDWithTime', () => {
   it('should get array of rooms for routing id with time', (done) => {
     let timeMark = Number(new Date());
-    let authMgr = new AuthManager({'managementApiUrl': 'https://iris.xrtc.me/', 'appKey': '6y14ljTXnjEgeHYZ0+R5NHA8FEEVg9wR'});
+    let authMgr = new AuthManager({'managementApiUrl': 'https://iris.xrtc.me/', 'appKey': appKey});
     authMgr.anonymousLogin('UserName', (data) => {
       expect(data).to.have.property('Token');
       let eventMgr = new EventManager({ emApiUrl: eventManagerUrl, jwt: data.Token });
@@ -406,7 +407,7 @@ describe('getRoomsForRoutingIDWithTime', () => {
 
 describe('getRootEventsForRoutingID', () => {
   it('should get root events for routing id', (done) => {
-    let authMgr = new AuthManager({'managementApiUrl': 'https://iris.xrtc.me/', 'appKey': '6y14ljTXnjEgeHYZ0+R5NHA8FEEVg9wR'});
+    let authMgr = new AuthManager({'managementApiUrl': 'https://iris.xrtc.me/', 'appKey': appKey});
     authMgr.anonymousLogin('UserName', (data) => {
       expect(data).to.have.property('Token');
       let eventMgr = new EventManager({ emApiUrl: eventManagerUrl, jwt: data.Token });
@@ -453,7 +454,7 @@ describe('getRootEventsForRoutingID', () => {
 describe('getRootEventsForRoutingIDWithTime', () => {
   it('should get root events for routing id for time period', (done) => {
     let timeMark = Number(new Date());
-    let authMgr = new AuthManager({'managementApiUrl': 'https://iris.xrtc.me/', 'appKey': '6y14ljTXnjEgeHYZ0+R5NHA8FEEVg9wR'});
+    let authMgr = new AuthManager({'managementApiUrl': 'https://iris.xrtc.me/', 'appKey': appKey});
     authMgr.anonymousLogin('UserName', (data) => {
       expect(data).to.have.property('Token');
       let eventMgr = new EventManager({ emApiUrl: eventManagerUrl, jwt: data.Token });
