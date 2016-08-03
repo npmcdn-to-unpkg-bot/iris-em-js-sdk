@@ -7,12 +7,15 @@ import { EventManager } from './index';
 {"room_name": "wGMQQtEi8YIrisVideoChat.comcast.com", "from":"1bcypode-mda4-8g02-dawk-63fmjrqps4qf@IrisVideoChat.comcast.com", "event_type": "videocall", "time_posted":1470099709669}
 'videocall', '2bcypode-mda6-8g02-dawk-63fmjrqps4qf@IrisVideoChat.comcast.com', '1bcypode-mda4-8g02-dawk-63fmjrqps4qf@IrisVideoChat.comcast.com', { field1: 'field1', field2: 'field2' }
 */
+
+const eventManagerUrl = 'https://st-evmgr-cmce-002.poc.sys.comcast.net/'
+
 describe('createXmppRootEventWithRoom', () => {
   it('should create xmpp root event', (done) => {
     let authMgr = new AuthManager({'managementApiUrl': 'https://iris.xrtc.me/', 'appKey': '6y14ljTXnjEgeHYZ0+R5NHA8FEEVg9wR'});
     authMgr.anonymousLogin('UserName', (data) => {
       expect(data).to.have.property('Token');
-      let eventMgr = new EventManager({ emApiUrl: 'https://st-evmgr-cmce-002.poc.sys.comcast.net/', jwt: data.Token });
+      let eventMgr = new EventManager({ emApiUrl: eventManagerUrl, jwt: data.Token });
       const options = {
         room_name: 'wGMQQtEi8Y@IrisVideoChat.comcast.com',
         event_type: 'videocall',
@@ -43,7 +46,7 @@ describe('createXmppRootEvent', () => {
     let authMgr = new AuthManager({'managementApiUrl': 'https://iris.xrtc.me/', 'appKey': '6y14ljTXnjEgeHYZ0+R5NHA8FEEVg9wR'});
     authMgr.anonymousLogin('UserName', (data) => {
       expect(data).to.have.property('Token');
-      let eventMgr = new EventManager({ emApiUrl: 'https://st-evmgr-cmce-002.poc.sys.comcast.net/', jwt: data.Token });
+      let eventMgr = new EventManager({ emApiUrl: eventManagerUrl, jwt: data.Token });
       const options = {
         event_type: 'videocall',
         from: '2bcypode-mda6-8g02-dawk-63fmjrqps4qf@IrisVideoChat.comcast.com',
@@ -74,7 +77,7 @@ describe('createRootEventWithRoom', () => {
     let authMgr = new AuthManager({'managementApiUrl': 'https://iris.xrtc.me/', 'appKey': '6y14ljTXnjEgeHYZ0+R5NHA8FEEVg9wR'});
     authMgr.anonymousLogin('UserName', (data) => {
       expect(data).to.have.property('Token');
-      let eventMgr = new EventManager({ emApiUrl: 'https://st-evmgr-cmce-002.poc.sys.comcast.net/', jwt: data.Token });
+      let eventMgr = new EventManager({ emApiUrl: eventManagerUrl, jwt: data.Token });
       const options = {
         room_name: 'wGMQQtEi8Y@IrisVideoChat.comcast.com',
         event_type: 'videocall',
@@ -105,7 +108,7 @@ describe('createRootEvent', () => {
     let authMgr = new AuthManager({'managementApiUrl': 'https://iris.xrtc.me/', 'appKey': '6y14ljTXnjEgeHYZ0+R5NHA8FEEVg9wR'});
     authMgr.anonymousLogin('UserName', (data) => {
       expect(data).to.have.property('Token');
-      let eventMgr = new EventManager({ emApiUrl: 'https://st-evmgr-cmce-002.poc.sys.comcast.net/', jwt: data.Token });
+      let eventMgr = new EventManager({ emApiUrl: eventManagerUrl, jwt: data.Token });
       const options = {
         event_type: 'videocall',
         from: '2bcypode-mda6-8g02-dawk-63fmjrqps4qf@IrisVideoChat.comcast.com',
@@ -136,7 +139,7 @@ describe('createChildEvent', () => {
     let authMgr = new AuthManager({'managementApiUrl': 'https://iris.xrtc.me/', 'appKey': '6y14ljTXnjEgeHYZ0+R5NHA8FEEVg9wR'});
     authMgr.anonymousLogin('UserName', (data) => {
       expect(data).to.have.property('Token');
-      let eventMgr = new EventManager({ emApiUrl: 'https://st-evmgr-cmce-002.poc.sys.comcast.net/', jwt: data.Token });
+      let eventMgr = new EventManager({ emApiUrl: eventManagerUrl, jwt: data.Token });
       const options = {
         room_name: 'wGMQQtEi8Y@IrisVideoChat.comcast.com',
         event_type: 'videocall',
@@ -183,7 +186,7 @@ describe('roomStatus', () => {
     let authMgr = new AuthManager({'managementApiUrl': 'https://iris.xrtc.me/', 'appKey': '6y14ljTXnjEgeHYZ0+R5NHA8FEEVg9wR'});
     authMgr.anonymousLogin('UserName', (data) => {
       expect(data).to.have.property('Token');
-      let eventMgr = new EventManager({ emApiUrl: 'https://st-evmgr-cmce-002.poc.sys.comcast.net/', jwt: data.Token });
+      let eventMgr = new EventManager({ emApiUrl: eventManagerUrl, jwt: data.Token });
       const options = {
         room_name: 'wGMQQtEi8Y@IrisVideoChat.comcast.com',
         event_type: 'videocall',
@@ -228,7 +231,7 @@ describe('getRooms', () => {
     let authMgr = new AuthManager({'managementApiUrl': 'https://iris.xrtc.me/', 'appKey': '6y14ljTXnjEgeHYZ0+R5NHA8FEEVg9wR'});
     authMgr.anonymousLogin('UserName', (data) => {
       expect(data).to.have.property('Token');
-      let eventMgr = new EventManager({ emApiUrl: 'https://st-evmgr-cmce-002.poc.sys.comcast.net/', jwt: data.Token });
+      let eventMgr = new EventManager({ emApiUrl: eventManagerUrl, jwt: data.Token });
       const options = {
         room_name: 'wGMQQtEi8Y@IrisVideoChat.comcast.com',
         event_type: 'videocall',
@@ -273,7 +276,7 @@ describe('getRoomsFromTime', () => {
     let authMgr = new AuthManager({'managementApiUrl': 'https://iris.xrtc.me/', 'appKey': '6y14ljTXnjEgeHYZ0+R5NHA8FEEVg9wR'});
     authMgr.anonymousLogin('UserName', (data) => {
       expect(data).to.have.property('Token');
-      let eventMgr = new EventManager({ emApiUrl: 'https://st-evmgr-cmce-002.poc.sys.comcast.net/', jwt: data.Token });
+      let eventMgr = new EventManager({ emApiUrl: eventManagerUrl, jwt: data.Token });
       const options = {
         room_name: 'wGMQQtEi8Y@IrisVideoChat.comcast.com',
         event_type: 'videocall',
@@ -317,7 +320,7 @@ describe('getRoomsForRoutingID', () => {
     let authMgr = new AuthManager({'managementApiUrl': 'https://iris.xrtc.me/', 'appKey': '6y14ljTXnjEgeHYZ0+R5NHA8FEEVg9wR'});
     authMgr.anonymousLogin('UserName', (data) => {
       expect(data).to.have.property('Token');
-      let eventMgr = new EventManager({ emApiUrl: 'https://st-evmgr-cmce-002.poc.sys.comcast.net/', jwt: data.Token });
+      let eventMgr = new EventManager({ emApiUrl: eventManagerUrl, jwt: data.Token });
       const options = {
         room_name: 'wGMQQtEi8Y@IrisVideoChat.comcast.com',
         event_type: 'videocall',
@@ -362,7 +365,7 @@ describe('getRoomsForRoutingIDWithTime', () => {
     let authMgr = new AuthManager({'managementApiUrl': 'https://iris.xrtc.me/', 'appKey': '6y14ljTXnjEgeHYZ0+R5NHA8FEEVg9wR'});
     authMgr.anonymousLogin('UserName', (data) => {
       expect(data).to.have.property('Token');
-      let eventMgr = new EventManager({ emApiUrl: 'https://st-evmgr-cmce-002.poc.sys.comcast.net/', jwt: data.Token });
+      let eventMgr = new EventManager({ emApiUrl: eventManagerUrl, jwt: data.Token });
       const options = {
         room_name: 'wGMQQtEi8Y@IrisVideoChat.comcast.com',
         event_type: 'videocall',
@@ -406,7 +409,7 @@ describe('getRootEventsForRoutingID', () => {
     let authMgr = new AuthManager({'managementApiUrl': 'https://iris.xrtc.me/', 'appKey': '6y14ljTXnjEgeHYZ0+R5NHA8FEEVg9wR'});
     authMgr.anonymousLogin('UserName', (data) => {
       expect(data).to.have.property('Token');
-      let eventMgr = new EventManager({ emApiUrl: 'https://st-evmgr-cmce-002.poc.sys.comcast.net/', jwt: data.Token });
+      let eventMgr = new EventManager({ emApiUrl: eventManagerUrl, jwt: data.Token });
       const options = {
         room_name: 'wGMQQtEi8Y@IrisVideoChat.comcast.com',
         event_type: 'videocall',
@@ -453,7 +456,7 @@ describe('getRootEventsForRoutingIDWithTime', () => {
     let authMgr = new AuthManager({'managementApiUrl': 'https://iris.xrtc.me/', 'appKey': '6y14ljTXnjEgeHYZ0+R5NHA8FEEVg9wR'});
     authMgr.anonymousLogin('UserName', (data) => {
       expect(data).to.have.property('Token');
-      let eventMgr = new EventManager({ emApiUrl: 'https://st-evmgr-cmce-002.poc.sys.comcast.net/', jwt: data.Token });
+      let eventMgr = new EventManager({ emApiUrl: eventManagerUrl, jwt: data.Token });
       const options = {
         room_name: 'wGMQQtEi8Y@IrisVideoChat.comcast.com',
         event_type: 'videocall',
