@@ -1,49 +1,29 @@
 import { expect } from 'chai';
-import { AuthManager } from './index';
+import { AuthManager } from 'iris-auth-js-sdk';
+import { EventManager } from './index';
 
-describe('anonymousLogin', () => {
-  it('should get valid JWT', (done) => {
+/*
+
+{"room_name": "wGMQQtEi8YIrisVideoChat.comcast.com", "from":"1bcypode-mda4-8g02-dawk-63fmjrqps4qf@IrisVideoChat.comcast.com", "event_type": "videocall", "time_posted":1470099709669}
+'videocall', '2bcypode-mda6-8g02-dawk-63fmjrqps4qf@IrisVideoChat.comcast.com', '1bcypode-mda4-8g02-dawk-63fmjrqps4qf@IrisVideoChat.comcast.com', { field1: 'field1', field2: 'field2' }
+*/
+describe('createXmppRootEventWithRoom', () => {
+  it('should create xmpp root event', (done) => {
     let authMgr = new AuthManager({'managementApiUrl': 'https://iris.xrtc.me/', 'appKey': '6y14ljTXnjEgeHYZ0+R5NHA8FEEVg9wR'});
     authMgr.anonymousLogin('UserName', (data) => {
       expect(data).to.have.property('Token');
-      done();
-    }, (error) => {
-      console.log(error);
-      expect(true).to.be.false;
-      done();
-    });
-  });
-});
-
-describe('anonymousLoginGetUserInformation', () => {
-  it('should return anonymous user', (done) => {
-    let authMgr = new AuthManager({'managementApiUrl': 'https://iris.xrtc.me/', 'appKey': '6y14ljTXnjEgeHYZ0+R5NHA8FEEVg9wR'});
-    authMgr.anonymousLogin('UserName', (data) => {
-      expect(data).to.have.property('Token');
-      authMgr.userInformation(data.Token, (data) => {
-        expect(data.error.message).to.equal('Anonymous user');
-        done();
-      }, (error) => {
-        console.log(error);
-        expect(true).to.be.false;
-        done();
-      });
-    }, (error) => {
-      console.log(error);
-      expect(true).to.be.false;
-      done();
-    });
-  });
-});
-
-describe('anonymousLoginValidateToken', () => {
-  it('should verify that token is valid', (done) => {
-    let authMgr = new AuthManager({'managementApiUrl': 'https://iris.xrtc.me/', 'appKey': '6y14ljTXnjEgeHYZ0+R5NHA8FEEVg9wR'});
-    authMgr.anonymousLogin('UserName', (data) => {
-      expect(data).to.have.property('Token');
-      authMgr.validateUserAccessToken(data.Token, (data) => {
+      let eventMgr = new EventManager({ emApiUrl: 'https://st-evmgr-cmce-002.poc.sys.comcast.net/', jwt: data.Token });
+      const options = {
+        room_name: 'wGMQQtEi8YIrisVideoChat.comcast.com',
+        event_type: 'videocall',
+        time_posted: Number(new Date()),
+        from: '1bcypode-mda4-8g02-dawk-63fmjrqps4qf@IrisVideoChat.comcast.com'
+      }
+      eventMgr.createXmppRootEvent(options, (data) => {
         console.log(data);
-        expect(data.error.message).to.equal('Valid token');
+        expect(data).to.have.property('Root_node_id');
+        expect(data).to.have.property('Child_node_id');
+        expect(data).to.have.property('Eventdata');
         done();
       }, (error) => {
         console.log(error);
@@ -58,13 +38,23 @@ describe('anonymousLoginValidateToken', () => {
   });
 });
 
-describe('anonymousLoginLogout', () => {
-  it('should logout successfully', (done) => {
+describe('createXmppRootEvent', () => {
+  it('should create xmpp root event', (done) => {
     let authMgr = new AuthManager({'managementApiUrl': 'https://iris.xrtc.me/', 'appKey': '6y14ljTXnjEgeHYZ0+R5NHA8FEEVg9wR'});
     authMgr.anonymousLogin('UserName', (data) => {
       expect(data).to.have.property('Token');
-      authMgr.logout(data.Token, (data) => {
-        expect(data.status).to.equal('User logged out');
+      let eventMgr = new EventManager({ emApiUrl: 'https://st-evmgr-cmce-002.poc.sys.comcast.net/', jwt: data.Token });
+      const options = {
+        event_type: 'videocall',
+        from: '2bcypode-mda6-8g02-dawk-63fmjrqps4qf@IrisVideoChat.comcast.com',
+        to: '1bcypode-mda4-8g02-dawk-63fmjrqps4qf@IrisVideoChat.comcast.com',
+        time_posted: Number(new Date())
+      }
+      eventMgr.createXmppRootEvent(options, (data) => {
+        console.log(data);
+        expect(data).to.have.property('Root_node_id');
+        expect(data).to.have.property('Child_node_id');
+        expect(data).to.have.property('Eventdata');
         done();
       }, (error) => {
         console.log(error);
@@ -79,16 +69,29 @@ describe('anonymousLoginLogout', () => {
   });
 });
 
-describe('anonymousLoginDecodeToken', () => {
-  it('should logout successfully', (done) => {
+describe('createRootEventWithRoom', () => {
+  it('should create root event', (done) => {
     let authMgr = new AuthManager({'managementApiUrl': 'https://iris.xrtc.me/', 'appKey': '6y14ljTXnjEgeHYZ0+R5NHA8FEEVg9wR'});
     authMgr.anonymousLogin('UserName', (data) => {
       expect(data).to.have.property('Token');
-      const decoded = authMgr.decodeToken(data.Token);
-      expect(decoded.header.alg).to.equal('ES256');
-      expect(decoded.header.typ).to.equal('JWT');
-      expect(decoded.payload.iss).to.equal('irisauth');
-      done();
+      let eventMgr = new EventManager({ emApiUrl: 'https://st-evmgr-cmce-002.poc.sys.comcast.net/', jwt: data.Token });
+      const options = {
+        room_name: 'wGMQQtEi8YIrisVideoChat.comcast.com',
+        event_type: 'videocall',
+        time_posted: Number(new Date()),
+        from: '1bcypode-mda4-8g02-dawk-63fmjrqps4qf@IrisVideoChat.comcast.com'
+      }
+      eventMgr.createRootEvent(options, (data) => {
+        console.log(data);
+        expect(data).to.have.property('Root_node_id');
+        expect(data).to.have.property('Child_node_id');
+        expect(data).to.have.property('Eventdata');
+        done();
+      }, (error) => {
+        console.log(error);
+        expect(true).to.be.false;
+        done();
+      });
     }, (error) => {
       console.log(error);
       expect(true).to.be.false;
@@ -97,85 +100,207 @@ describe('anonymousLoginDecodeToken', () => {
   });
 });
 
-describe('emailRegister', () => {
-  it('should get valid JWT', (done) => {
+describe('createRootEvent', () => {
+  it('should create root event', (done) => {
     let authMgr = new AuthManager({'managementApiUrl': 'https://iris.xrtc.me/', 'appKey': '6y14ljTXnjEgeHYZ0+R5NHA8FEEVg9wR'});
-    authMgr.emailRegister('UserName', 'test1@test.com', 'password', (data) => {
+    authMgr.anonymousLogin('UserName', (data) => {
       expect(data).to.have.property('Token');
-      done();
+      let eventMgr = new EventManager({ emApiUrl: 'https://st-evmgr-cmce-002.poc.sys.comcast.net/', jwt: data.Token });
+      const options = {
+        event_type: 'videocall',
+        from: '2bcypode-mda6-8g02-dawk-63fmjrqps4qf@IrisVideoChat.comcast.com',
+        to: '1bcypode-mda4-8g02-dawk-63fmjrqps4qf@IrisVideoChat.comcast.com',
+        time_posted: Number(new Date())
+      }
+      eventMgr.createRootEvent(options, (data) => {
+        console.log(data);
+        expect(data).to.have.property('Root_node_id');
+        expect(data).to.have.property('Child_node_id');
+        expect(data).to.have.property('Eventdata');
+        done();
+      }, (error) => {
+        console.log(error);
+        expect(true).to.be.false;
+        done();
+      });
     }, (error) => {
-      const responseBody = error.response;
-      expect(responseBody.status).to.equal(409);
-      done();
-    });
-  });
-});
-
-describe('emailLogin', () => {
-  it('should get valid JWT', (done) => {
-    let authMgr = new AuthManager({'managementApiUrl': 'https://iris.xrtc.me/', 'appKey': '6y14ljTXnjEgeHYZ0+R5NHA8FEEVg9wR'});
-    authMgr.emailLogin('test1@test.com', 'password', (data) => {
-      expect(data).to.have.property('Token');
-      done();
-    }, (error) => {
+      console.log(error);
       expect(true).to.be.false;
       done();
     });
   });
 });
 
-describe('emailLoginGetUserInformation', () => {
-  it('should get valid JWT', (done) => {
+describe('createChildEvent', () => {
+  it('should create child event', (done) => {
     let authMgr = new AuthManager({'managementApiUrl': 'https://iris.xrtc.me/', 'appKey': '6y14ljTXnjEgeHYZ0+R5NHA8FEEVg9wR'});
-    authMgr.emailLogin('test1@test.com', 'password', (data) => {
+    authMgr.anonymousLogin('UserName', (data) => {
       expect(data).to.have.property('Token');
-      authMgr.userInformation(data.Token, (data) => {
-        expect(data.TokenType).to.equal('Email');
-        expect(data.Email).to.equal('test1@test.com');
-        done();
+      let eventMgr = new EventManager({ emApiUrl: 'https://st-evmgr-cmce-002.poc.sys.comcast.net/', jwt: data.Token });
+      const options = {
+        room_name: 'wGMQQtEi8YIrisVideoChat.comcast.com',
+        event_type: 'videocall',
+        time_posted: Number(new Date()),
+        from: '1bcypode-mda4-8g02-dawk-63fmjrqps4qf@IrisVideoChat.comcast.com'
+      }
+      eventMgr.createRootEvent(options, (data) => {
+        console.log(data);
+        expect(data).to.have.property('Root_node_id');
+        expect(data).to.have.property('Child_node_id');
+        expect(data).to.have.property('Eventdata');
+        const childOptions = {
+          node_id: data.Child_node_id,
+          event_type: 'videocall',
+          from: '1bcypode-mda4-8g02-dawk-63fmjrqps4qf@IrisVideoChat.comcast.com',
+          time_posted: Number(new Date()),
+          root_node_id: data.Root_node_id
+        }
+        eventMgr.createChildEvent(childOptions, (childData) => {
+          console.log(childData);
+          expect(childData).to.have.property('Child_node_id');
+          expect(childData).to.have.property('Eventdata');
+          done();
+        }, (error) => {
+          console.log(error);
+          expect(true).to.be.false;
+          done();
+        });
       }, (error) => {
+        console.log(error);
         expect(true).to.be.false;
         done();
       });
     }, (error) => {
+      console.log(error);
       expect(true).to.be.false;
       done();
     });
   });
 });
 
-describe('emailLoginValidateAccessToken', () => {
-  it('should get valid JWT', (done) => {
+describe('roomStatus', () => {
+  it('should get room status', (done) => {
     let authMgr = new AuthManager({'managementApiUrl': 'https://iris.xrtc.me/', 'appKey': '6y14ljTXnjEgeHYZ0+R5NHA8FEEVg9wR'});
-    authMgr.emailLogin('test1@test.com', 'password', (data) => {
+    authMgr.anonymousLogin('UserName', (data) => {
       expect(data).to.have.property('Token');
-      authMgr.validateUserAccessToken(data.Token, (data) => {
-        expect(data.error.message).to.equal('Valid token');
-        done();
+      let eventMgr = new EventManager({ emApiUrl: 'https://st-evmgr-cmce-002.poc.sys.comcast.net/', jwt: data.Token });
+      const options = {
+        room_name: 'wGMQQtEi8YIrisVideoChat.comcast.com',
+        event_type: 'videocall',
+        time_posted: Number(new Date()),
+        from: '1bcypode-mda4-8g02-dawk-63fmjrqps4qf@IrisVideoChat.comcast.com'
+      }
+      eventMgr.createRootEvent(options, (data) => {
+        console.log(data);
+        expect(data).to.have.property('Root_node_id');
+        expect(data).to.have.property('Child_node_id');
+        expect(data).to.have.property('Eventdata');
+
+        eventMgr.roomStatus('wGMQQtEi8YIrisVideoChat.comcast.com', (roomStatusData) => {
+          console.log(roomStatusData);
+          expect(roomStatusData).to.have.property('Rtc_server');
+          done();
+        }, (error) => {
+          console.log(error);
+          expect(true).to.be.false;
+          done();
+        });
       }, (error) => {
+        console.log(error);
         expect(true).to.be.false;
         done();
       });
     }, (error) => {
+      console.log(error);
       expect(true).to.be.false;
       done();
     });
   });
 });
 
-describe('emailLoginLogout', () => {
-  it('should get valid JWT', (done) => {
+describe('getRooms', () => {
+  it('should get array of rooms for app domain', (done) => {
     let authMgr = new AuthManager({'managementApiUrl': 'https://iris.xrtc.me/', 'appKey': '6y14ljTXnjEgeHYZ0+R5NHA8FEEVg9wR'});
-    authMgr.emailLogin('test1@test.com', 'password', (data) => {
+    authMgr.anonymousLogin('UserName', (data) => {
       expect(data).to.have.property('Token');
-      authMgr.logout(data.Token, (data) => {
-        expect(data.status).to.equal('User logged out');
-        done();
+      let eventMgr = new EventManager({ emApiUrl: 'https://st-evmgr-cmce-002.poc.sys.comcast.net/', jwt: data.Token });
+      const options = {
+        room_name: 'wGMQQtEi8YIrisVideoChat.comcast.com',
+        event_type: 'videocall',
+        time_posted: Number(new Date()),
+        from: '1bcypode-mda4-8g02-dawk-63fmjrqps4qf@IrisVideoChat.comcast.com'
+      }
+      eventMgr.createRootEvent(options, (data) => {
+        console.log(data);
+        expect(data).to.have.property('Root_node_id');
+        expect(data).to.have.property('Child_node_id');
+        expect(data).to.have.property('Eventdata');
+
+        eventMgr.getRooms('IrisVideoChat.comcast.com', 10, (rooms) => {
+          console.log(rooms);
+          expect(rooms.length).to.be.above(0);
+          rooms.map((room) => {
+            expect(room).to.have.property('Room_id');
+            expect(room).to.have.property('Last_seen');
+          })
+          done();
+        }, (error) => {
+          console.log(error);
+          expect(true).to.be.false;
+          done();
+        });
       }, (error) => {
+        console.log(error);
         expect(true).to.be.false;
         done();
       });
     }, (error) => {
+      console.log(error);
+      expect(true).to.be.false;
+      done();
+    });
+  });
+});
+
+describe('getRoomsFromTime', () => {
+  it('should get array of rooms for app domain from specified time', (done) => {
+    let timeMark = Number(new Date());
+    let authMgr = new AuthManager({'managementApiUrl': 'https://iris.xrtc.me/', 'appKey': '6y14ljTXnjEgeHYZ0+R5NHA8FEEVg9wR'});
+    authMgr.anonymousLogin('UserName', (data) => {
+      expect(data).to.have.property('Token');
+      let eventMgr = new EventManager({ emApiUrl: 'https://st-evmgr-cmce-002.poc.sys.comcast.net/', jwt: data.Token });
+      const options = {
+        room_name: 'wGMQQtEi8YIrisVideoChat.comcast.com',
+        event_type: 'videocall',
+        time_posted: Number(new Date()),
+        from: '1bcypode-mda4-8g02-dawk-63fmjrqps4qf@IrisVideoChat.comcast.com'
+      }
+      eventMgr.createRootEvent(options, (data) => {
+        console.log(data);
+        expect(data).to.have.property('Root_node_id');
+        expect(data).to.have.property('Child_node_id');
+        expect(data).to.have.property('Eventdata');
+
+        eventMgr.getRoomsFromTime('IrisVideoChat.comcast.com', timeMark, 10, (rooms) => {
+          console.log(rooms);
+          expect(rooms.length).to.be.above(0);
+          rooms.map((room) => {
+            expect(room).to.have.property('Room_id');
+            expect(room).to.have.property('Last_seen');
+          })
+          done();
+        }, (error) => {
+          console.log(error);
+          expect(true).to.be.false;
+          done();
+        });
+      }, (error) => {
+        console.log(error);
+        expect(true).to.be.false;
+        done();
+      });
+    }, (error) => {
+      console.log(error);
       expect(true).to.be.false;
       done();
     });
