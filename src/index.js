@@ -388,4 +388,96 @@ export class EventManager {
       errorCallback(error);
     });
   }
+
+  /**
+  * @desc Get root events - This API is called to get a reverse chronological (most recent first) and paginated list of direct root
+  *                         events associated with a routing ID. THE LIST IS SORTED (most recent to least recent) BY EVENT UPDATE TIME.
+  * @param type      - Type of event (Ex: "audiocall", "videocall", "comments", "pictureshare", "liveshare", "likes",...)
+  * @param id        - Routing ID.
+  * @param count     - Number of records requested.
+  *
+  * @param successCallback - callback for success case.  Receives response as
+  *        a parameter.  Following information is returned on successful call:
+  *
+  *    node_id                                UUID         Room ID
+  *    root_event_updated_at                  64-bit int   Time in milliseconds.
+  *    child_node_id                          UUID         child node id
+  *    root_node_id                           UUID         This MUST be passed in the request body when calling
+  *                                                        API PUT /events/createchildevent.
+  *                                                        This refers to the root event by most recent updated
+  *                                                        time. Any descendant leaf node will keep this as a
+  *                                                        reference to the root event.
+  *   eventdata                              blob         A stringified JSON blob of event specific data. This data is created and maintained
+  *                                                        by the event manager. The first name value pair is ALWAYS the version in the format
+  *                                                        "version":"1.0" - This will help identify/track changes to the JSON blob and keep
+  *                                                        this blog backward/forward compatible.
+  *   userdata                               blob         User specific data added a the time of creating this event.
+  *
+  * @param errorCallback - callback for failured case.  Receives error description.
+  */
+  getRootEventsForRoutingID(eventType, routingID, count, successCallback, errorCallback) {
+    return fetch(this.config.emApiUrl + 'events/view/event/' + encodeURI(eventType) + '/routingid/' + encodeURI(routingID) + '/records/' + count.toString(), {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': this.config.jwt,
+      },
+    })
+    .then(this._checkStatus)
+    .then(this._parseJSON)
+    .then((data) => {
+      successCallback(data);
+    })
+    .catch((error) => {
+      console.log('getRootEventsForRoutingID failed: ' + error);
+      errorCallback(error);
+    });
+  }
+
+  /**
+  * @desc Get root events - This API is called to get a reverse chronological (from time specified in parameter) and
+  *                         paginated list of direct root events associated with a routing ID. THE LIST IS SORTED (from the time
+  *                         specified in the parameter to least recent) BY EVENT UPDATE TIME.
+  * @param type      - Type of event (Ex: "audiocall", "videocall", "comments", "pictureshare", "liveshare", "likes",...)
+  * @param id        - Routing ID.
+  * @param time      - Time in Milliseconds. From this time, get list of records in reverse chronological order.
+  * @param count     - Number of records requested.
+  *
+  * @param successCallback - callback for success case.  Receives response as
+  *        a parameter.  Following information is returned on successful call:
+  *
+  *    node_id                                UUID         Room ID
+  *    root_event_updated_at                  64-bit int   Time in milliseconds.
+  *    child_node_id                          UUID         child node id
+  *    root_node_id                           UUID         This MUST be passed in the request body when calling
+  *                                                        API PUT /events/createchildevent.
+  *                                                        This refers to the root event by most recent updated
+  *                                                        time. Any descendant leaf node will keep this as a
+  *                                                        reference to the root event.
+  *   eventdata                              blob         A stringified JSON blob of event specific data. This data is created and maintained
+  *                                                        by the event manager. The first name value pair is ALWAYS the version in the format
+  *                                                        "version":"1.0" - This will help identify/track changes to the JSON blob and keep
+  *                                                        this blog backward/forward compatible.
+  *   userdata                               blob         User specific data added a the time of creating this event.
+  *
+  * @param errorCallback - callback for failured case.  Receives error description.
+  */
+  getRootEventsForRoutingIDWithTime(eventType, routingID, time, count, successCallback, errorCallback) {
+    return fetch(this.config.emApiUrl + 'events/view/event/' + encodeURI(eventType) + '/routingid/' + encodeURI(routingID) + '/time/' + time.toString() + '/records/' + count.toString(), {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': this.config.jwt,
+      },
+    })
+    .then(this._checkStatus)
+    .then(this._parseJSON)
+    .then((data) => {
+      successCallback(data);
+    })
+    .catch((error) => {
+      console.log('getRootEventsForRoutingIDWithTime failed: ' + error);
+      errorCallback(error);
+    });
+  }
 }
