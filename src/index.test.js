@@ -273,7 +273,6 @@ describe('getRooms', () => {
 
 describe('getRoomsFromTime', () => {
   it('should get array of rooms for app domain from specified time', (done) => {
-    let timeMark = Number(new Date());
     let authMgr = new AuthManager({'managementApiUrl': 'https://iris.xrtc.me/', 'appKey': appKey});
     authMgr.anonymousLogin('UserName', (data) => {
       expect(data).to.have.property('Token');
@@ -289,7 +288,7 @@ describe('getRoomsFromTime', () => {
         expect(data).to.have.property('Root_node_id');
         expect(data).to.have.property('Child_node_id');
         expect(data).to.have.property('Eventdata');
-
+        let timeMark = Number(new Date());
         eventMgr.getRoomsFromTime('IrisVideoChat.comcast.com', timeMark, 10, (rooms) => {
           console.log(rooms);
           expect(rooms.length).to.be.above(0);
@@ -362,7 +361,6 @@ describe('getRoomsForRoutingID', () => {
 
 describe('getRoomsForRoutingIDWithTime', () => {
   it('should get array of rooms for routing id with time', (done) => {
-    let timeMark = Number(new Date());
     let authMgr = new AuthManager({'managementApiUrl': 'https://iris.xrtc.me/', 'appKey': appKey});
     authMgr.anonymousLogin('UserName', (data) => {
       expect(data).to.have.property('Token');
@@ -378,7 +376,7 @@ describe('getRoomsForRoutingIDWithTime', () => {
         expect(data).to.have.property('Root_node_id');
         expect(data).to.have.property('Child_node_id');
         expect(data).to.have.property('Eventdata');
-
+        let timeMark = Number(new Date());
         eventMgr.getRoomsForRoutingIDWithTime('1bcypode-mda4-8g02-dawk-63fmjrqps4qf@IrisVideoChat.comcast.com', timeMark, 10, (rooms) => {
           console.log(rooms);
           expect(rooms.length).to.be.above(0);
@@ -453,7 +451,6 @@ describe('getRootEventsForRoutingID', () => {
 
 describe('getRootEventsForRoutingIDWithTime', () => {
   it('should get root events for routing id for time period', (done) => {
-    let timeMark = Number(new Date());
     let authMgr = new AuthManager({'managementApiUrl': 'https://iris.xrtc.me/', 'appKey': appKey});
     authMgr.anonymousLogin('UserName', (data) => {
       expect(data).to.have.property('Token');
@@ -469,7 +466,7 @@ describe('getRootEventsForRoutingIDWithTime', () => {
         expect(data).to.have.property('Root_node_id');
         expect(data).to.have.property('Child_node_id');
         expect(data).to.have.property('Eventdata');
-
+        let timeMark = Number(new Date());
         eventMgr.getRootEventsForRoutingIDWithTime('videocall', '1bcypode-mda4-8g02-dawk-63fmjrqps4qf@IrisVideoChat.comcast.com', timeMark, 10, (events) => {
           console.log(events);
           expect(events.length).to.be.above(0);
@@ -547,7 +544,6 @@ describe('getRootEventsForRoom', () => {
 
 describe('getRootEventsForRoomWithTime', () => {
   it('should get root events for room name for time period', (done) => {
-    let timeMark = Number(new Date());
     let authMgr = new AuthManager({'managementApiUrl': 'https://iris.xrtc.me/', 'appKey': appKey});
     authMgr.anonymousLogin('UserName', (data) => {
       expect(data).to.have.property('Token');
@@ -563,7 +559,7 @@ describe('getRootEventsForRoomWithTime', () => {
         expect(data).to.have.property('Root_node_id');
         expect(data).to.have.property('Child_node_id');
         expect(data).to.have.property('Eventdata');
-
+        let timeMark = Number(new Date());
         eventMgr.getRootEventsForRoomWithTime('videocall', 'wGMQQtEi8Y@IrisVideoChat.comcast.com', timeMark, 10, (events) => {
           console.log(events);
           expect(events.length).to.be.above(0);
@@ -643,7 +639,6 @@ describe('getRootEventsForRoomID', () => {
 
 describe('getRootEventsForRoomIDWithTime', () => {
   it('should get root events for room id for time period', (done) => {
-    let timeMark = Number(new Date());
     let authMgr = new AuthManager({'managementApiUrl': 'https://iris.xrtc.me/', 'appKey': appKey});
     authMgr.anonymousLogin('UserName', (data) => {
       expect(data).to.have.property('Token');
@@ -660,7 +655,7 @@ describe('getRootEventsForRoomIDWithTime', () => {
         expect(data).to.have.property('Child_node_id');
         expect(data).to.have.property('Eventdata');
         console.log('RoomID: ' + data.Eventdata.Room_id);
-
+        let timeMark = Number(new Date());
         eventMgr.getRootEventsForRoomIDWithTime('videocall', data.Eventdata.Room_id, timeMark, 10, (events) => {
           console.log(events);
           expect(events.length).to.be.above(0);
@@ -760,14 +755,14 @@ describe('getChildEvents', () => {
         eventMgr.createChildEvent(childOptions, (childData) => {
           console.log(childData);
           expect(childData).to.have.property('Child_node_id');
-          eventMgr.getChildEvents(childData.Child_node_id, 10, (childNodes) => {
+          eventMgr.getChildEvents(data.Child_node_id, 10, (childNodes) => {
             console.log(childNodes);
             expect(childNodes.length).to.be.above(0);
             childNodes.map((childNode) => {
               expect(childNode).to.have.property('Routing_id');
               expect(childNode).to.have.property('Child_node_id');
-              expect(childNode).to.have.property('Root_event_created_at');
-              expect(childNode).to.have.property('Root_event_updated_at');
+              expect(childNode).to.have.property('Event_type');
+              expect(childNode).to.have.property('Time_posted');
               expect(childNode).to.have.property('Eventdata');
             });
             done();
@@ -797,7 +792,6 @@ describe('getChildEvents', () => {
 
 describe('getChildEventsWithTime', () => {
   it('should create child event with time', (done) => {
-    let timeMark = Number(new Date());
     let authMgr = new AuthManager({'managementApiUrl': 'https://iris.xrtc.me/', 'appKey': appKey});
     authMgr.anonymousLogin('UserName', (data) => {
       expect(data).to.have.property('Token');
@@ -823,14 +817,15 @@ describe('getChildEventsWithTime', () => {
         eventMgr.createChildEvent(childOptions, (childData) => {
           console.log(childData);
           expect(childData).to.have.property('Child_node_id');
-          eventMgr.getChildEventsWithTime(childData.Child_node_id, timeMark, 10, (childNodes) => {
+          let timeMark = Number(new Date());
+          eventMgr.getChildEventsWithTime(data.Child_node_id, timeMark, 10, (childNodes) => {
             console.log(childNodes);
             expect(childNodes.length).to.be.above(0);
             childNodes.map((childNode) => {
               expect(childNode).to.have.property('Routing_id');
               expect(childNode).to.have.property('Child_node_id');
-              expect(childNode).to.have.property('Root_event_created_at');
-              expect(childNode).to.have.property('Root_event_updated_at');
+              expect(childNode).to.have.property('Event_type');
+              expect(childNode).to.have.property('Time_posted');
               expect(childNode).to.have.property('Eventdata');
             });
             done();
