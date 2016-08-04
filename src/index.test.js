@@ -712,19 +712,161 @@ describe('getEventCount', () => {
 
         eventMgr.getEventCount('videocall', data.Eventdata.Room_id, (events) => {
           console.log(events);
-          expect(events.length).to.be.above(0);
-          events.map((event) => {
-            expect(event).to.have.property('Node_id');
-            expect(event).to.have.property('Child_node_id');
-            expect(event).to.have.property('Root_node_id');
-            expect(event).to.have.property('Eventdata');
-          })
+          expect(events).to.have.property('Count');
+          expect(events.Count).to.be.above(0);
           done();
         }, (error) => {
           console.log(error);
           expect(true).to.be.false;
           done();
         });
+      }, (error) => {
+        console.log(error);
+        expect(true).to.be.false;
+        done();
+      });
+    }, (error) => {
+      console.log(error);
+      expect(true).to.be.false;
+      done();
+    });
+  });
+});
+
+describe('getChildEvents', () => {
+  it('should create child event', (done) => {
+    let authMgr = new AuthManager({'managementApiUrl': 'https://iris.xrtc.me/', 'appKey': appKey});
+    authMgr.anonymousLogin('UserName', (data) => {
+      expect(data).to.have.property('Token');
+      let eventMgr = new EventManager({ emApiUrl: eventManagerUrl, jwt: data.Token });
+      const options = {
+        room_name: 'wGMQQtEi8Y@IrisVideoChat.comcast.com',
+        event_type: 'videocall',
+        time_posted: Number(new Date()),
+        from: '1bcypode-mda4-8g02-dawk-63fmjrqps4qf@IrisVideoChat.comcast.com'
+      }
+      eventMgr.createRootEvent(options, (data) => {
+        console.log(data);
+        expect(data).to.have.property('Root_node_id');
+        expect(data).to.have.property('Child_node_id');
+        expect(data).to.have.property('Eventdata');
+        const childOptions = {
+          node_id: data.Child_node_id,
+          event_type: 'videocall',
+          from: '1bcypode-mda4-8g02-dawk-63fmjrqps4qf@IrisVideoChat.comcast.com',
+          time_posted: Number(new Date()),
+          root_node_id: data.Root_node_id
+        }
+        eventMgr.createChildEvent(childOptions, (childData) => {
+          console.log(childData);
+          expect(childData).to.have.property('Child_node_id');
+          eventMgr.getChildEvents(childData.Child_node_id, 10, (childNodes) => {
+            console.log(childNodes);
+            expect(childNodes.length).to.be.above(0);
+            childNodes.map((childNode) => {
+              expect(childNode).to.have.property('Routing_id');
+              expect(childNode).to.have.property('Child_node_id');
+              expect(childNode).to.have.property('Root_event_created_at');
+              expect(childNode).to.have.property('Root_event_updated_at');
+              expect(childNode).to.have.property('Eventdata');
+            });
+            done();
+          }, (error) => {
+            console.log(error);
+            expect(true).to.be.false;
+            done();
+          });
+        }, (error) => {
+          console.log(error);
+          expect(true).to.be.false;
+          done();
+        });
+      }, (error) => {
+        console.log(error);
+        expect(true).to.be.false;
+        done();
+      });
+    }, (error) => {
+      console.log(error);
+      expect(true).to.be.false;
+      done();
+    });
+  });
+});
+
+
+describe('getChildEventsWithTime', () => {
+  it('should create child event with time', (done) => {
+    let timeMark = Number(new Date());
+    let authMgr = new AuthManager({'managementApiUrl': 'https://iris.xrtc.me/', 'appKey': appKey});
+    authMgr.anonymousLogin('UserName', (data) => {
+      expect(data).to.have.property('Token');
+      let eventMgr = new EventManager({ emApiUrl: eventManagerUrl, jwt: data.Token });
+      const options = {
+        room_name: 'wGMQQtEi8Y@IrisVideoChat.comcast.com',
+        event_type: 'videocall',
+        time_posted: Number(new Date()),
+        from: '1bcypode-mda4-8g02-dawk-63fmjrqps4qf@IrisVideoChat.comcast.com'
+      }
+      eventMgr.createRootEvent(options, (data) => {
+        console.log(data);
+        expect(data).to.have.property('Root_node_id');
+        expect(data).to.have.property('Child_node_id');
+        expect(data).to.have.property('Eventdata');
+        const childOptions = {
+          node_id: data.Child_node_id,
+          event_type: 'videocall',
+          from: '1bcypode-mda4-8g02-dawk-63fmjrqps4qf@IrisVideoChat.comcast.com',
+          time_posted: Number(new Date()),
+          root_node_id: data.Root_node_id
+        }
+        eventMgr.createChildEvent(childOptions, (childData) => {
+          console.log(childData);
+          expect(childData).to.have.property('Child_node_id');
+          eventMgr.getChildEventsWithTime(childData.Child_node_id, timeMark, 10, (childNodes) => {
+            console.log(childNodes);
+            expect(childNodes.length).to.be.above(0);
+            childNodes.map((childNode) => {
+              expect(childNode).to.have.property('Routing_id');
+              expect(childNode).to.have.property('Child_node_id');
+              expect(childNode).to.have.property('Root_event_created_at');
+              expect(childNode).to.have.property('Root_event_updated_at');
+              expect(childNode).to.have.property('Eventdata');
+            });
+            done();
+          }, (error) => {
+            console.log(error);
+            expect(true).to.be.false;
+            done();
+          });
+        }, (error) => {
+          console.log(error);
+          expect(true).to.be.false;
+          done();
+        });
+      }, (error) => {
+        console.log(error);
+        expect(true).to.be.false;
+        done();
+      });
+    }, (error) => {
+      console.log(error);
+      expect(true).to.be.false;
+      done();
+    });
+  });
+});
+
+describe('getEventManagerStatus', () => {
+  it('should get event manager status', (done) => {
+    let authMgr = new AuthManager({'managementApiUrl': 'https://iris.xrtc.me/', 'appKey': appKey});
+    authMgr.anonymousLogin('UserName', (data) => {
+      expect(data).to.have.property('Token');
+      let eventMgr = new EventManager({ emApiUrl: eventManagerUrl, jwt: data.Token });
+      eventMgr.getEventManagerStatus((data) => {
+        console.log(data);
+        expect(data).to.have.property('Version');
+        done();
       }, (error) => {
         console.log(error);
         expect(true).to.be.false;

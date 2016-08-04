@@ -688,4 +688,159 @@ export class EventManager {
       errorCallback(error);
     });
   }
+
+  /**
+  * @desc Get child events - This API is called to get a reverse chronological (most recent first) and paginated list of
+  *                          child events. THE LIST IS SORTED (most recent to least recent) BY TIME EVENT WAS POSTED.
+  *                          NOTE: The node id in the parameter MUST be the child node ID (as against the room ID).
+  * @param id        - Child node ID in UUID format (created upon calling API PUT /events/createchildevent).
+  * @param count     - Number of records requested.
+  *
+  * @param successCallback - callback for success case.  Receives response as
+  *        a parameter.  Following information is returned on successful call:
+  *
+  *    routing_id             string         Routing_id which triggered this child event.
+  *    child_node_id          UUID           Node ID for ALL DIRECT child events.
+  *    time_posted            64-bit int     Time in milliseconds.
+  *    root_node_id           UUID           This MUST be passed in the request body when calling
+  *                                          API PUT /events/createchildevent.
+  *                                          This refers to the root event by most recent updated
+  *                                          time. Any descendant leaf node will keep this as a
+  *                                          reference to the root event.
+  *    eventdata              blob           A stringified JSON blob of event specific data. This data is created and maintained
+  *                                          by the event manager. The first name value pair is ALWAYS the version in the format
+  *                                          "version":"1.0" - This will help identify/track changes to the JSON blob and keep
+  *                                          this blog backward/forward compatible.
+  *    userdata               blob           User specific data added a the time of creating this event.
+  *
+  * @param errorCallback - callback for failured case.  Receives error description.
+  */
+  getChildEvents(childNodeID, count, successCallback, errorCallback) {
+    return fetch(this.config.emApiUrl + 'events/node/' + childNodeID + '/records/' + count.toString(), {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': this.config.jwt,
+      },
+    })
+    .then(this._checkStatus)
+    .then(this._parseJSON)
+    .then((data) => {
+      successCallback(data);
+    })
+    .catch((error) => {
+      console.log('getChildEvents failed: ' + error);
+      errorCallback(error);
+    });
+  }
+
+  /**
+  * @desc Get child events - This API is called to get a reverse chronological (from time specified in parameter) and
+  *                          paginated list of child events. THE LIST IS SORTED (from the time specified in the parameter
+  *                          to least recent) BY TIME EVENT WAS POSTED.
+  *                          NOTE: The node id in the parameter MUST be the child node ID (as against the room ID).
+  * @param id        - Child node ID in UUID format (created upon calling API PUT /events/createchildevent).
+  * @param time      - Time in Milliseconds. From this time, get list of records in reverse chronological order.
+  * @param count     - Number of records requested.
+  *
+  * @param successCallback - callback for success case.  Receives response as
+  *        a parameter.  Following information is returned on successful call:
+  *
+  *    routing_id             string         Routing_id which triggered this child event.
+  *    child_node_id          UUID           Node ID for ALL DIRECT child events.
+  *    time_posted            64-bit int     Time in milliseconds.
+  *    root_node_id           UUID           This MUST be passed in the request body when calling
+  *                                          API PUT /events/createchildevent.
+  *                                          This refers to the root event by most recent updated
+  *                                          time. Any descendant leaf node will keep this as a
+  *                                          reference to the root event.
+  *    eventdata              blob           A stringified JSON blob of event specific data. This data is created and maintained
+  *                                          by the event manager. The first name value pair is ALWAYS the version in the format
+  *                                          "version":"1.0" - This will help identify/track changes to the JSON blob and keep
+  *                                          this blog backward/forward compatible.
+  *    userdata               blob           User specific data added a the time of creating this event.
+  *
+  * @param errorCallback - callback for failured case.  Receives error description.
+  */
+  getChildEventsWithTime(childNodeID, time, count, successCallback, errorCallback) {
+    return fetch(this.config.emApiUrl + 'events/node/' + childNodeID + '/time/' + time.toString() + '/records/' + count.toString(), {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': this.config.jwt,
+      },
+    })
+    .then(this._checkStatus)
+    .then(this._parseJSON)
+    .then((data) => {
+      successCallback(data);
+    })
+    .catch((error) => {
+      console.log('getChildEventsWithTime failed: ' + error);
+      errorCallback(error);
+    });
+  }
+
+  /**
+  * @desc Get Event Manager Status - This API serves 2 purposes
+  *                                  1. Health Check - A 200 OK response indicates the event manager is running.
+  *                                  2. Version - Returns version in response body
+  *
+  * @param successCallback - callback for success case.  Receives response as
+  *        a parameter.  Following information is returned on successful call:
+  *
+  *    version           string        Event Manager version.
+  *
+  * @param errorCallback - callback for failured case.  Receives error description.
+  */
+  getEventManagerStatus(successCallback, errorCallback) {
+    return fetch(this.config.emApiUrl + 'events/version', {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': this.config.jwt,
+      },
+    })
+    .then(this._checkStatus)
+    .then(this._parseJSON)
+    .then((data) => {
+      successCallback(data);
+    })
+    .catch((error) => {
+      console.log('getEventManagerStatus failed: ' + error);
+      errorCallback(error);
+    });
+  }
+
+  /**
+  * @desc Delete room
+  *
+  * @param id        - Room ID associated with a XMPP multi-user chat session
+  * @param server    - RTC server which hosted multi-user chat session with the room ID in request parameter
+  *
+  * @param successCallback - callback for success case.  Receives response as
+  *        a parameter.  Following information is returned on successful call:
+  *
+  *    200 OK if Room ID is valid.
+  *
+  * @param errorCallback - callback for failured case.  Receives error description.
+  */
+  deleteRoom(roomID, rtcServer, successCallback, errorCallback) {
+    return fetch(this.config.emApiUrl + 'events/mapping/room/' + roomID + '/rtcserver/' + rtcServer, {
+      method: 'DELETE',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': this.config.jwt,
+      },
+    })
+    .then(this._checkStatus)
+    .then(this._parseJSON)
+    .then((data) => {
+      successCallback(data);
+    })
+    .catch((error) => {
+      console.log('deleteRoom failed: ' + error);
+      errorCallback(error);
+    });
+  }
 }
