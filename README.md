@@ -16,6 +16,7 @@ https://npmcdn.com/iris-em-js-sdk@1.0.2/dist/iris.em.min.js
 
 ### Create xmpp root event
 * options - object with the following fields:
+```
     Case 1 - Given from and to participants; NO room_name
     event_type        string              (MANDATORY) Type of event (Ex: "audiocall", "videocall", "comments", "pictureshare", "liveshare", "likes",...)
     time_posted       64-bit int          (MANDATORY) Time, in milliseconds, this event occured. If not present,
@@ -36,10 +37,10 @@ https://npmcdn.com/iris-em-js-sdk@1.0.2/dist/iris.em.min.js
     time_posted       64-bit int          (MANDATORY) Time, in milliseconds, this event occured. If not present,
                                           it will be the time when data is written to DB.
     userdata          blob                (OPTIONAL) User specific data associated with this event. A stringified JSON blob.
-
+```
 * successCallback - callback for success case.  Receives response as
         a parameter.  Following information is returned on successful call:
-
+```
     root_node_id          UUID         Will be stored in all child nodes. This MUST be passed
                                        in the request body when calling API PUT /events/createchildevent.
                                        This refers to the root event by most recent updated time. Any
@@ -61,5 +62,6 @@ https://npmcdn.com/iris-em-js-sdk@1.0.2/dist/iris.em.min.js
                                            xmpp_token_expiry_time: <value in seconds>
                                            room_token: <string>
                                        }
-
+```
 * errorCallback - callback for failured case.  Receives error description.
+
