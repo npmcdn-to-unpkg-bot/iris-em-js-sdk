@@ -7,8 +7,12 @@ export class EventManager {
   }
 
   _checkStatus(response) {
-    console.log('response status: ' + response.status);
-    if (response.status >= 200 && response.status < 300) {
+    //console.log('response status: ' + response.status);
+    if (response.status === 204) {
+      let error = new Error(response.statusText);
+      error.response = response;
+      throw error;
+    } else if (response.status >= 200 && response.status < 300) {
       return response;
     } else {
       let error = new Error(response.statusText);
@@ -74,7 +78,7 @@ export class EventManager {
   * @param errorCallback - callback for failured case.  Receives error description.
   */
   createXmppRootEvent(options, successCallback, errorCallback) {
-    console.log(options);
+    //console.log(options);
     return fetch(this.config.emApiUrl + 'events/createxmpprootevent', {
       method: 'PUT',
       headers: {
@@ -89,7 +93,7 @@ export class EventManager {
       successCallback(data);
     })
     .catch((error) => {
-      console.log('createXmppRootEvent failed: ' + error);
+      //console.log('createXmppRootEvent failed: ' + error);
       errorCallback(error);
     });
   }
@@ -161,7 +165,7 @@ export class EventManager {
       successCallback(data);
     })
     .catch((error) => {
-      console.log('createRootEventWithRoom failed: ' + error);
+      //console.log('createRootEventWithRoom failed: ' + error);
       errorCallback(error);
     });
   }
@@ -215,7 +219,7 @@ export class EventManager {
       successCallback(data);
     })
     .catch((error) => {
-      console.log('createChildEvent failed: ' + error);
+      //console.log('createChildEvent failed: ' + error);
       errorCallback(error);
     });
   }
@@ -246,7 +250,7 @@ export class EventManager {
       successCallback(data);
     })
     .catch((error) => {
-      console.log('roomStatus failed: ' + error);
+      //console.log('roomStatus failed: ' + error);
       errorCallback(error);
     });
   }
@@ -267,7 +271,6 @@ export class EventManager {
   * @param errorCallback - callback for failured case.  Receives error description.
   */
   getRooms(appDomain, count, successCallback, errorCallback) {
-    console.log(this.config.emApiUrl + 'events/rooms/appdomain/' + encodeURI(appDomain) + '/records/' + count.toString());
     return fetch(this.config.emApiUrl + 'events/rooms/appdomain/' + encodeURI(appDomain) + '/records/' + count.toString(), {
     //return fetch(this.config.emApiUrl + 'events/rooms/appdomain/' + encodeURIComponent(appDomain.replace(/\./g, '&#46;')) + '/records/' + count.toString(), {
       method: 'GET',
@@ -282,7 +285,7 @@ export class EventManager {
       successCallback(data);
     })
     .catch((error) => {
-      console.log('getRooms failed: ' + error);
+      //console.log('getRooms failed: ' + error);
       errorCallback(error);
     });
   }
@@ -317,7 +320,7 @@ export class EventManager {
       successCallback(data);
     })
     .catch((error) => {
-      console.log('getRoomsFromTime failed: ' + error);
+      //console.log('getRoomsFromTime failed: ' + error);
       errorCallback(error);
     });
   }
@@ -350,7 +353,7 @@ export class EventManager {
       successCallback(data);
     })
     .catch((error) => {
-      console.log('getRoomsForRoutingID failed: ' + error);
+      //console.log('getRoomsForRoutingID failed: ' + error);
       errorCallback(error);
     });
   }
@@ -384,7 +387,7 @@ export class EventManager {
       successCallback(data);
     })
     .catch((error) => {
-      console.log('getRoomsForRoutingID failed: ' + error);
+      //console.log('getRoomsForRoutingID failed: ' + error);
       errorCallback(error);
     });
   }
@@ -429,7 +432,7 @@ export class EventManager {
       successCallback(data);
     })
     .catch((error) => {
-      console.log('getRootEventsForRoutingID failed: ' + error);
+      //console.log('getRootEventsForRoutingID failed: ' + error);
       errorCallback(error);
     });
   }
@@ -476,7 +479,7 @@ export class EventManager {
       successCallback(data);
     })
     .catch((error) => {
-      console.log('getRootEventsForRoutingIDWithTime failed: ' + error);
+      //console.log('getRootEventsForRoutingIDWithTime failed: ' + error);
       errorCallback(error);
     });
   }
@@ -519,7 +522,7 @@ export class EventManager {
       successCallback(data);
     })
     .catch((error) => {
-      console.log('getRootEventsForRoom failed: ' + error);
+      //console.log('getRootEventsForRoom failed: ' + error);
       errorCallback(error);
     });
   }
@@ -563,7 +566,7 @@ export class EventManager {
       successCallback(data);
     })
     .catch((error) => {
-      console.log('getRootEventsForRoomWithTime failed: ' + error);
+      //console.log('getRootEventsForRoomWithTime failed: ' + error);
       errorCallback(error);
     });
   }
@@ -607,7 +610,7 @@ export class EventManager {
       successCallback(data);
     })
     .catch((error) => {
-      console.log('getRootEventsForRoomID failed: ' + error);
+      //console.log('getRootEventsForRoomID failed: ' + error);
       errorCallback(error);
     });
   }
@@ -652,7 +655,7 @@ export class EventManager {
       successCallback(data);
     })
     .catch((error) => {
-      console.log('getRootEventsForRoomIDWithTime failed: ' + error);
+      //console.log('getRootEventsForRoomIDWithTime failed: ' + error);
       errorCallback(error);
     });
   }
@@ -684,7 +687,7 @@ export class EventManager {
       successCallback(data);
     })
     .catch((error) => {
-      console.log('getEventCount failed: ' + error);
+      //console.log('getEventCount failed: ' + error);
       errorCallback(error);
     });
   }
@@ -729,7 +732,7 @@ export class EventManager {
       successCallback(data);
     })
     .catch((error) => {
-      console.log('getChildEvents failed: ' + error);
+      //console.log('getChildEvents failed: ' + error);
       errorCallback(error);
     });
   }
@@ -776,7 +779,7 @@ export class EventManager {
       successCallback(data);
     })
     .catch((error) => {
-      console.log('getChildEventsWithTime failed: ' + error);
+      //console.log('getChildEventsWithTime failed: ' + error);
       errorCallback(error);
     });
   }
@@ -807,7 +810,7 @@ export class EventManager {
       successCallback(data);
     })
     .catch((error) => {
-      console.log('getEventManagerStatus failed: ' + error);
+      //console.log('getEventManagerStatus failed: ' + error);
       errorCallback(error);
     });
   }
@@ -839,7 +842,7 @@ export class EventManager {
       successCallback(data);
     })
     .catch((error) => {
-      console.log('deleteRoom failed: ' + error);
+      //console.log('deleteRoom failed: ' + error);
       errorCallback(error);
     });
   }
