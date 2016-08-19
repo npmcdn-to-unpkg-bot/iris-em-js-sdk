@@ -1,4 +1,4 @@
-# Iris Auth JS SDK
+# Iris Event Manager JS SDK
 ## Introduction
 This section describes JavaScript SDK for Iris Event Manager.  This SDK is isomorphic and can be used both from the browser or node.  Package can be installed with
 
