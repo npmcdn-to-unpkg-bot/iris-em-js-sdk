@@ -9,7 +9,7 @@ npm i iris-em-js-sdk
 or can be included from webpage from following cdn:
 
 ```
-https://npmcdn.com/iris-em-js-sdk@1.0.2/dist/iris.em.min.js
+https://unpkg.com/iris-em-js-sdk@1.0.2/dist/iris.em.min.js
 ```
 
 ## APIs
